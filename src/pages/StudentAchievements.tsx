@@ -9,6 +9,8 @@ import { Trophy, Upload, ExternalLink, Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
+const API_BASE = "https://edugrade-backend-aand.onrender.com/api";
+
 export default function StudentAchievements() {
   const [type, setType] = useState<'inter-college' | 'external'>('inter-college');
   const [date, setDate] = useState("");
@@ -30,8 +32,7 @@ export default function StudentAchievements() {
     }
 
     try {
-      const res = await fetch(`http://edugrade-in.onrender.com/api
-:4001/api/student/achievements/${userId}`);
+      const res = await fetch(`${API_BASE}/student/achievements/${userId}`);
       const json = await res.json();
 
       if (json.achievements) {
@@ -61,7 +62,7 @@ export default function StudentAchievements() {
     if (!confirm("Are you sure you want to delete this achievement?")) return;
     
     try {
-      const res = await fetch(`https://edugrade-in.onrender.com/api:4001/api/student/achievement/${id}`, {
+      const res = await fetch(`${API_BASE}/student/achievement/${id}`, {
         method: "DELETE"
       });
       
@@ -116,9 +117,8 @@ export default function StudentAchievements() {
 
     try {
       const url = editingId 
-        ? `http://edugrade-in.onrender.com/api
-:4001/api/student/achievement/${editingId}`
-        : "http://edugrade-in.onrender.com/api:4001/api/student/achievement";
+        ? `${API_BASE}/student/achievement/${editingId}`
+        : `${API_BASE}/student/achievement`;
       const method = editingId ? "PUT" : "POST";
       
       const res = await fetch(url, {

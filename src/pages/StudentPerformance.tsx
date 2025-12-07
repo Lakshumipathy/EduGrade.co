@@ -106,13 +106,14 @@ export default function StudentPerformance() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
- const BACKEND_URL = "http://localhost:4001/api/student/performance";
+ const BACKEND_URL = "https://edugrade-backend-aand.onrender.com/api/student/performance";
 
 
   const [regNo, setRegNo] = useState("");
   const [semester, setSemester] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(null);
+  const [selectedCareer, setSelectedCareer] = useState<string>("");
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -159,6 +160,8 @@ export default function StudentPerformance() {
       }
 
       const json = await res.json();
+      console.log('Performance data:', json);
+      console.log('Career suggestions:', json.careerSuggestions);
       setData(json);
       
       await fetchAchievementContribution(achievementYear);
@@ -195,7 +198,7 @@ export default function StudentPerformance() {
       setAchievementLoading(true);
 
       const res = await fetch(
-        `http://localhost:4001/api/contributions/achievements?regNo=${regNo}&year=${year}`
+        `https://edugrade-backend-aand.onrender.com/api/contributions/achievements?regNo=${regNo}&year=${year}`
       );
       const json = await res.json();
 
@@ -228,7 +231,7 @@ export default function StudentPerformance() {
       setContribLoading(true);
 
       const res = await fetch(
-        `http://localhost:4001/api/contributions/research-internship?regNo=${regNo}&year=${year}`
+        `https://edugrade-backend-aand.onrender.com/api/contributions/research-internship?regNo=${regNo}&year=${year}`
       );
       const json = await res.json();
 
@@ -402,96 +405,6 @@ export default function StudentPerformance() {
             </CardContent>
           </Card>
 
-          {/* AI Performance Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle> Performance Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {(() => {
-                const strongSubjects = data.subjects.filter((s: any) => s.status === 'Strong');
-                const weakSubjects = data.subjects.filter((s: any) => s.status === 'Weak');
-                const totalSubjects = data.subjects.length;
-                
-                const getPerformanceAnalysis = () => {
-                  if (weakSubjects.length === 0) {
-                    return {
-                      type: 'excellent',
-                      title: '🌟 Excellent Performance!',
-                      message: `Outstanding work! You've achieved strong performance in all ${totalSubjects} subjects with an overall ${data.overallPercentage}% average. You're demonstrating consistent excellence across your curriculum.`,
-                      bgColor: 'bg-green-50',
-                      borderColor: 'border-green-200',
-                      textColor: 'text-green-700'
-                    };
-                  } else if (strongSubjects.length > weakSubjects.length) {
-                    return {
-                      type: 'good',
-                      title: ' Strong Overall Performance',
-                      message: `Great job! You're performing well in ${strongSubjects.length} out of ${totalSubjects} subjects (${data.overallPercentage}% overall). Focus on improving the ${weakSubjects.length} subject${weakSubjects.length > 1 ? 's' : ''} that need attention.`,
-                      bgColor: 'bg-blue-50',
-                      borderColor: 'border-blue-200',
-                      textColor: 'text-blue-700'
-                    };
-                  } else if (strongSubjects.length === weakSubjects.length) {
-                    return {
-                      type: 'balanced',
-                      title: ' Balanced Performance',
-                      message: `You have a balanced performance with ${strongSubjects.length} strong and ${weakSubjects.length} weak subjects (${data.overallPercentage}% overall). Focus on bringing up the weaker areas to achieve consistent excellence.`,
-                      bgColor: 'bg-yellow-50',
-                      borderColor: 'border-yellow-200',
-                      textColor: 'text-yellow-700'
-                    };
-                  } else {
-                    return {
-                      type: 'needs-improvement',
-                      title: '⚠️ Needs Focused Improvement',
-                      message: `You have ${weakSubjects.length} subjects needing improvement compared to ${strongSubjects.length} strong subjects (${data.overallPercentage}% overall). With dedicated effort, you can significantly improve your performance.`,
-                      bgColor: 'bg-red-50',
-                      borderColor: 'border-red-200',
-                      textColor: 'text-red-700'
-                    };
-                  }
-                };
-                
-                const analysis = getPerformanceAnalysis();
-                
-                return (
-                  <>
-                    <div className={`${analysis.bgColor} border ${analysis.borderColor} p-4 rounded-lg mb-4`}>
-                      <h3 className={`text-lg font-semibold ${analysis.textColor}`}>{analysis.title}</h3>
-                      <p className={analysis.textColor}>{analysis.message}</p>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mt-4">
-                      <div className="text-center p-3 bg-green-100 rounded-lg">
-                        <div className="text-2xl font-bold text-green-700">{strongSubjects.length}</div>
-                        <div className="text-sm text-green-600">Strong Subjects</div>
-                      </div>
-                      <div className="text-center p-3 bg-red-100 rounded-lg">
-                        <div className="text-2xl font-bold text-red-700">{weakSubjects.length}</div>
-                        <div className="text-sm text-red-600">Weak Subjects</div>
-                      </div>
-                    </div>
-                    
-                    {strongSubjects.length > 0 && (
-                      <div className="mt-4">
-                        <p className="font-semibold text-green-700 mb-2">✅ Strong Subjects:</p>
-                        <p className="text-green-600">{strongSubjects.map((s: any) => s.name).join(', ')}</p>
-                      </div>
-                    )}
-                    
-                    {weakSubjects.length > 0 && (
-                      <div className="mt-4">
-                        <p className="font-semibold text-red-700 mb-2">📈 Subjects Needing Improvement:</p>
-                        <p className="text-red-600">{weakSubjects.map((s: any) => s.name).join(', ')}</p>
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
-            </CardContent>
-          </Card>
-
           {/* Improvement Plan - Only show if there are weak subjects */}
           {data.improvementPlan && data.improvementPlan.length > 0 && (
             <Card>
@@ -563,30 +476,95 @@ export default function StudentPerformance() {
             </Card>
           )}
 
-          {/* Success Celebration - Only show if no weak subjects */}
-          {data.subjects.filter((s: any) => s.status === 'Weak').length === 0 && (
+          {/* Career Suggestions with Dropdown Filter */}
+          {data.careerSuggestions && data.careerSuggestions.length > 0 && (
             <Card>
-              <CardHeader>
-                <CardTitle> Congratulations!</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>🎯 Career Path Recommendations</CardTitle>
+                  <CardDescription>Select a subject to explore career options</CardDescription>
+                </div>
+                <Select value={selectedCareer} onValueChange={setSelectedCareer}>
+                  <SelectTrigger className="w-[250px]">
+                    <SelectValue placeholder="Choose a subject" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {data.careerSuggestions.map((career: any, i: number) => (
+                      <SelectItem key={i} value={career.subjectName}>
+                        {career.subjectName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </CardHeader>
               <CardContent>
-                <div className="text-center p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
-                  <div className="text-4xl mb-4">🏆</div>
-                  <h3 className="text-xl font-bold text-green-700 mb-2">Perfect Performance!</h3>
-                  <p className="text-green-600 mb-4">
-                    You've achieved strong performance in all subjects. This demonstrates excellent understanding and consistent effort across your curriculum.
-                  </p>
-                  <div className="flex justify-center gap-4 text-sm">
-                    <div className="bg-white px-4 py-2 rounded-lg shadow">
-                      <div className="font-bold text-green-700">{data.overallPercentage}%</div>
-                      <div className="text-gray-600">Overall Score</div>
-                    </div>
-                    <div className="bg-white px-4 py-2 rounded-lg shadow">
-                      <div className="font-bold text-blue-700">{data.subjects.length}/{data.subjects.length}</div>
-                      <div className="text-gray-600">Strong Subjects</div>
-                    </div>
+                {selectedCareer ? (
+                  (() => {
+                    const career = data.careerSuggestions.find((c: any) => c.subjectName === selectedCareer);
+                    if (!career) return null;
+                    return (
+                      <div className="border border-blue-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-xl font-bold text-blue-900">{career.career}</h3>
+                          <span className="text-sm bg-blue-100 px-3 py-1 rounded-full text-blue-700">
+                            Based on {career.subjectName} ({career.marks} marks)
+                          </span>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <div>
+                            <p className="font-semibold text-blue-800 mb-2">📜 Recommended Certifications:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {career.certifications.map((cert: any, j: number) => (
+                                <a 
+                                  key={j} 
+                                  href={cert.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="bg-white px-3 py-1 rounded-lg text-sm text-blue-700 border border-blue-200 hover:bg-blue-50 transition-colors cursor-pointer"
+                                >
+                                  {cert.name}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <p className="font-semibold text-blue-800 mb-2">💻 Practice Platforms:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {career.platforms.map((platform: any, j: number) => (
+                                <a 
+                                  key={j} 
+                                  href={platform.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="bg-white px-3 py-1 rounded-lg text-sm text-green-700 border border-green-200 hover:bg-green-50 transition-colors cursor-pointer"
+                                >
+                                  {platform.name}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <a 
+                              href={career.roadmap} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                              🗺️ View Career Roadmap
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    Select a subject from the dropdown to view career recommendations
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
           )}

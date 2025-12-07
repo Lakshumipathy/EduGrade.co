@@ -2,6 +2,7 @@ import { NavLink as RouterNavLink, NavLinkProps } from "react-router-dom";
 import { forwardRef, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { useSidebar } from "@/components/ui/sidebar";
 
 interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
   className?: string;
@@ -13,10 +14,17 @@ interface NavLinkCompatProps extends Omit<NavLinkProps, "className"> {
 
 const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
   ({ className, activeClassName, pendingClassName, badge, children, to, ...props }, ref) => {
+    const { setOpenMobile, isMobile } = useSidebar();
+    
     return (
       <RouterNavLink
         ref={ref}
         to={to}
+        onClick={() => {
+          if (isMobile) {
+            setOpenMobile(false);
+          }
+        }}
         className={({ isActive, isPending }) =>
           cn(
             "flex items-center gap-2 w-full",

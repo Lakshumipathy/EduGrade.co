@@ -23,7 +23,7 @@ export default function TeacherAchievements() {
   useEffect(() => {
     async function fetchAchievements() {
       try {
-        const res = await fetch("http://edugrade-in.onrender.com/api:4001/api/teacher/achievements");
+        const res = await fetch("https://edugrade-backend-aand.onrender.com/api/teacher/achievements");
         const json = await res.json();
 
         if (json.achievements) {

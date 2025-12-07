@@ -97,15 +97,15 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="border-r">
-      <SidebarContent>
-        <div className="p-6">
-          <h2 className="text-xl font-bold text-sidebar-foreground">EduGrade</h2>
-          <p className="text-sm text-sidebar-foreground/70 capitalize">{role} Portal</p>
+    <Sidebar className="border-r bg-white">
+      <SidebarContent className="bg-white">
+        <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600">
+          <h2 className="text-xl font-bold text-white">EduGrade</h2>
+          <p className="text-sm text-white/90 capitalize">{role} Portal</p>
         </div>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sidebar-foreground/70">Menu</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-600">Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -113,12 +113,12 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink 
                       to={item.url} 
-                      className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                      activeClassName="bg-sidebar-primary text-sidebar-primary-foreground font-medium"
+                      className="text-gray-700 hover:bg-blue-50 hover:text-blue-700"
+                      activeClassName="bg-blue-100 text-blue-700 font-medium"
                       badge={getBadge(item.title)}
                     >
-                      <item.icon className="h-4 w-4" />
-                      {open && <span>{item.title}</span>}
+                      <item.icon className="h-4 w-4 text-current" />
+                      <span>{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -128,9 +128,9 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <div className="mt-auto p-4">
-          <SidebarMenuButton onClick={handleLogout} className="w-full text-sidebar-foreground hover:bg-sidebar-accent">
-            <LogOut className="h-4 w-4" />
-            {open && <span>Logout</span>}
+          <SidebarMenuButton onClick={handleLogout} className="w-full text-gray-700 hover:bg-red-50 hover:text-red-700">
+            <LogOut className="h-4 w-4 text-current" />
+            <span>Logout</span>
           </SidebarMenuButton>
         </div>
       </SidebarContent>

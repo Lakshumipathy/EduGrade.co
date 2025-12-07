@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 import {
   Card,
@@ -18,7 +19,7 @@ import { useAuth } from "@/contexts/AuthContext";
 type Role = "student" | "teacher";
 type Mode = "login" | "register";
 
-const API_BASE = "https://edugrade-in.onrender.com/api";
+const API_BASE = "https://edugrade-backend-aand.onrender.com/api";
 
 
 export default function Login() {
@@ -40,6 +41,10 @@ export default function Login() {
   const [teacherConfirm, setTeacherConfirm] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [showStudentPassword, setShowStudentPassword] = useState(false);
+  const [showStudentConfirm, setShowStudentConfirm] = useState(false);
+  const [showTeacherPassword, setShowTeacherPassword] = useState(false);
+  const [showTeacherConfirm, setShowTeacherConfirm] = useState(false);
 
   const resetPasswords = () => {
     setStudentPassword("");
@@ -294,23 +299,41 @@ return (
 
                 <div className="space-y-2">
                   <Label>Password</Label>
-                  <Input
-                    type="password"
-                    value={studentPassword}
-                    onChange={(e) => setStudentPassword(e.target.value)}
-                    required
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showStudentPassword ? "text" : "password"}
+                      value={studentPassword}
+                      onChange={(e) => setStudentPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowStudentPassword(!showStudentPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showStudentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
 
                 {mode === "register" && (
                   <div className="space-y-2">
                     <Label>Confirm Password</Label>
-                    <Input
-                      type="password"
-                      value={studentConfirm}
-                      onChange={(e) => setStudentConfirm(e.target.value)}
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showStudentConfirm ? "text" : "password"}
+                        value={studentConfirm}
+                        onChange={(e) => setStudentConfirm(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowStudentConfirm(!showStudentConfirm)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showStudentConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                 )}
               </>
@@ -343,23 +366,41 @@ return (
 
                 <div className="space-y-2">
                   <Label>Password</Label>
-                  <Input
-                    type="password"
-                    value={teacherPassword}
-                    onChange={(e) => setTeacherPassword(e.target.value)}
-                    required
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showTeacherPassword ? "text" : "password"}
+                      value={teacherPassword}
+                      onChange={(e) => setTeacherPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowTeacherPassword(!showTeacherPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showTeacherPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
 
                 {mode === "register" && (
                   <div className="space-y-2">
                     <Label>Confirm Password</Label>
-                    <Input
-                      type="password"
-                      value={teacherConfirm}
-                      onChange={(e) => setTeacherConfirm(e.target.value)}
-                      required
-                    />
+                    <div className="relative">
+                      <Input
+                        type={showTeacherConfirm ? "text" : "password"}
+                        value={teacherConfirm}
+                        onChange={(e) => setTeacherConfirm(e.target.value)}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowTeacherConfirm(!showTeacherConfirm)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showTeacherConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                 )}
               </>

@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <AppSidebar />
         <div className="flex-1 flex flex-col">
           <header className="h-16 border-b bg-card flex items-center px-6 sticky top-0 z-10">
-            <SidebarTrigger />
+            <SidebarTrigger className="bg-slate-800 text-white hover:bg-slate-700" />
             <div className="ml-4">
               <h1 className="text-lg font-semibold text-foreground">
                 {userRole === 'student' ? 'Student' : 'Teacher'} Performance System
